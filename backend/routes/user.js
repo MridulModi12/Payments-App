@@ -2,7 +2,7 @@ const express = require('express')
 const userRouter = express.Router()
 const zod = require('zod')
 const jwt = require('jsonwebtoken')
-const { User } = require('../db')
+const { User, Account } = require('../db')
 const authMiddleware = require('../middleware')
 
 
@@ -17,7 +17,7 @@ const signInSchema = zod.object({
     password: zod.string().min(6).max(15)
 })
 const updateSchema = zod.object({
-    password: zod.string().optional().min(6).max(15),
+    password: zod.string().optional(),
     firstName: zod.string().optional(),
     lastName: zod.string().optional()
 })
@@ -33,7 +33,7 @@ userRouter.post('/signup', async (req, res) => {
         })
     }
     //handling already taken email case
-    const existingUser = User.findOne({username: req.body.username})
+    const existingUser = await User.findOne({username: req.body.username})
     if(existingUser) {
         return res.status(411).json({
             message: "Email already taken / Incorrect inputs"
@@ -46,6 +46,13 @@ userRouter.post('/signup', async (req, res) => {
         lastName: req.body.lastName,
         password: req.body.password
     })
+
+    //making an account document for the signed up user
+    await Account.create({
+        userId: userDoc._id,
+        balance: Math.floor(Math.random() * 10000) + 1
+    })
+
     //signing and returning the jwt
     const userId = userDoc._id
     const token = jwt.sign({
@@ -67,7 +74,7 @@ userRouter.post('/signin', async (req, res) => {
             message: "Incorrect inputs"
         })
     }
-    const existingUser = User.findOne({
+    const existingUser = await User.findOne({
         username: req.body.username,
         password: req.body.password
     })
