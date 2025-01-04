@@ -1,4 +1,3 @@
-const userRouter = require("./routes/user");
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
