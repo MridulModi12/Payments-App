@@ -10,11 +10,11 @@ const signUpSchema = zod.object({
     username: zod.string().email({message: "Invalid email address"}),
     firstName: zod.string(),
     lastName: zod.string(),
-    password: zod.string().min(6).max(15)
+    password: zod.string().min(6).max(20)
 })
 const signInSchema = zod.object({
     username: zod.string().email({message: "Invalid email address"}),
-    password: zod.string().min(6).max(15)
+    password: zod.string().min(6).max(20)
 })
 const updateSchema = zod.object({
     password: zod.string().optional(),
@@ -25,9 +25,9 @@ const updateSchema = zod.object({
 
 userRouter.post('/signup', async (req, res) => {
     //doing zod validation
-    const result = signUpSchema.safeParse(req.body)
+    const { success } = signUpSchema.safeParse(req.body)
     //handling incorrect inputs
-    if(!result.success) {
+    if(!success) {
         return res.status(411).json({
             message: "Email already taken / Incorrect inputs"
         })
