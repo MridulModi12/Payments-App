@@ -4,6 +4,7 @@ const { jwtSecret } = require('./config');
 function authMiddleware(req, res, next) {
     //retrieve the token from the headers
     const authHeader = req.headers.authorization;
+    
     //check if the desired token is present
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(403).json({});
