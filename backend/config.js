@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 module.exports = {
-    jwtSecret: process.env.jwtSecret 
+  jwtSecret: process.env.jwtSecret 
 }
