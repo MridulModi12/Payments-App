@@ -12,6 +12,7 @@ export function Signup() {
   const [lastName, setLastName] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
   const navigate = useNavigate()
 
   return <div className="bg-slate-300 h-screen flex justify-center">
@@ -23,16 +24,21 @@ export function Signup() {
         <InputBox onchange={e=>setLastName(e.target.value)} label="Last Name" placeholder="Doe" />
         <InputBox onchange={e=>setUsername(e.target.value)} label="Email" placeholder="johndoe@example.com" />
         <InputBox onchange={e=>setPassword(e.target.value)} label="Password" placeholder="" />
+        {error && <div className="text-red-500">{error}</div>}
         <div className="pt-4">
           <Button onClick={async()=> {
-            const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
-              username,
-              firstName,
-              lastName,
-              password
-            })
-            localStorage.setItem("token", response.data.token)
-            navigate("/dashboard")
+            try {
+              const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
+                username,
+                firstName,
+                lastName,
+                password
+              })
+              localStorage.setItem("token", response.data.token)
+              navigate("/dashboard")
+            } catch(err) {
+              setError(err.response.data.message || "Sign up failed. Please try again.")
+            }
           }} label="Sign up"/>
         </div>
         <BottomWarning label="Already have an account?" buttonText="Sign in" to="/signin" />

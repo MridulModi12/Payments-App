@@ -34,15 +34,23 @@ export function SendMoney() {
                 className="h-10 w-full rounded-md border px-3 py-2 text-sm"
               />
             </div>
-            <button onClick={() => {
-              axios.post("http://localhost:3000/api/v1/account/transfer", {
-                to,
-                amount
-              }, {
-                headers: {
-                  Authorization: "Bearer " + localStorage.getItem("token")
+            <button onClick={async () => {
+              try {
+                const response = await axios.post("http://localhost:3000/api/v1/account/transfer", {
+                  to,
+                  amount
+                }, {
+                  headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                  }
+                });
+                if (response.status === 200) {
+                  navigate("/success");
                 }
-              })
+              } catch (err) {
+                console.error("Error during transfer:", err);
+                alert("Transfer failed. Please try again.");
+              }
             }} className="rounded-md text-sm font-medium h-10 px-4 py-2 w-full bg-green-500 text-white">
               Initiate Transfer
             </button>

@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import { Button } from "./Button"
 import axios from "axios"
-import { userID } from "../token"
 import { useNavigate } from "react-router-dom"
+import { jwtDecode } from "jwt-decode"
 
 export function Users() {
   const [users, setUsers] = useState([])
   const [filter, setFilter] = useState("")
+  const token = localStorage.getItem("token")
+  const userID = token ? jwtDecode(token).userId : null
 
   useEffect(()=>{
     axios.get("http://localhost:3000/api/v1/user/bulk?filter=" + filter)

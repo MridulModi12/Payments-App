@@ -1,12 +1,39 @@
+import axios from "axios";
 import { Appbar } from "../components/Appbar";
 import { Balance } from "../components/Balance";
 import { Users } from "../components/Users";
+import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 export function Dashboard() {
+  const token = localStorage.getItem("token")
+  const userID = token ? jwtDecode(token).userId : null
+  const [balance, setBalance] = useState()
+  const [users, setUsers] = useState([])
+
+  useEffect(() => {
+    const response = axios.get("http://localhost:3000/api/v1/account/balance", {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    }).then(response => setBalance(response.data.balance))
+      .catch(err => console.log("Error in get balance axios request: " + err))
+  },[])
+
+
+  useEffect(()=>{
+    axios.get("http://localhost:3000/api/v1/user/bulk")
+      .then(response => setUsers(response.data.users))
+      .catch(err => console.error("Error fetching users " + err))
+  }, [])
+
+  const user = users.find((user) => user._id == userID)
+  const name = user ? user.firstName : ""
+
   return <div>
-    <Appbar />
+    <Appbar name={name} />
     <div className="m-8">
-      <Balance value="10,000" />
+      <Balance value={balance} />
       <Users />
     </div>
   </div>
