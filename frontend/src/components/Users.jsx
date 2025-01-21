@@ -9,9 +9,10 @@ export function Users() {
   const [filter, setFilter] = useState("")
   const token = localStorage.getItem("token")
   const userID = token ? jwtDecode(token).userId : null
+  const backendUrl = import.meta.env.VITE_API_BACKEND_URL
 
   useEffect(()=>{
-    axios.get("http://localhost:3000/api/v1/user/bulk?filter=" + filter)
+    axios.get(`${backendUrl}/api/v1/user/bulk?filter=${filter}`)
       .then(response => setUsers(response.data.users))
       .catch(err => console.error("Error fetching users " + err))
   }, [filter])

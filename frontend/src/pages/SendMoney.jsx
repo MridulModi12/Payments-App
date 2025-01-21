@@ -8,6 +8,7 @@ export function SendMoney() {
   const name = searchParams.get("name")
   const [amount, setAmount] = useState(0)
   const navigate = useNavigate()
+  const backendUrl = import.meta.env.VITE_API_BACKEND_URL
 
   return <div className="flex justify-center h-screen bg-gray-100">
     <div className="h-full flex flex-col justify-center">
@@ -36,7 +37,7 @@ export function SendMoney() {
             </div>
             <button onClick={async () => {
               try {
-                const response = await axios.post("http://localhost:3000/api/v1/account/transfer", {
+                const response = await axios.post(`${backendUrl}/api/v1/account/transfer`, {
                   to,
                   amount
                 }, {

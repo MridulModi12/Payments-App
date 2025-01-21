@@ -14,6 +14,7 @@ export function Signup() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const navigate = useNavigate()
+  const backendUrl = import.meta.env.VITE_API_BACKEND_URL
 
   return <div className="bg-slate-300 h-screen flex justify-center">
     <div className="flex flex-col justify-center">
@@ -28,7 +29,7 @@ export function Signup() {
         <div className="pt-4">
           <Button onClick={async()=> {
             try {
-              const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
+              const response = await axios.post(`${backendUrl}/api/v1/user/signup`, {
                 username,
                 firstName,
                 lastName,

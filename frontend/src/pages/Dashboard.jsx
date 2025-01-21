@@ -10,9 +10,10 @@ export function Dashboard() {
   const userID = token ? jwtDecode(token).userId : null
   const [balance, setBalance] = useState()
   const [users, setUsers] = useState([])
+  const backendUrl = import.meta.env.VITE_API_BACKEND_URL
 
   useEffect(() => {
-    const response = axios.get("http://localhost:3000/api/v1/account/balance", {
+    axios.get(`${backendUrl}/api/v1/account/balance`, {
       headers: {
         Authorization: "Bearer " + token
       }
@@ -22,7 +23,7 @@ export function Dashboard() {
 
 
   useEffect(()=>{
-    axios.get("http://localhost:3000/api/v1/user/bulk")
+    axios.get(`${backendUrl}/api/v1/user/bulk`)
       .then(response => setUsers(response.data.users))
       .catch(err => console.error("Error fetching users " + err))
   }, [])
